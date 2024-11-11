@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <!-- Thiết lập các góc bo tròn -->
+    <corners android:radius="20dp"/>
+
+    <!-- Màu nền của layout -->
+    <solid android:color="#DBF9F8"/>
+
+    <!-- Khoảng cách từ biên ngoài vào nội dung bên trong -->
+    <padding android:left="10dp" android:right="10dp" android:top="10dp" android:bottom="10dp"/>
+
+    <!-- Độ dày của đường viền và màu sắc -->
+    <stroke android:width="1dp" android:color="#DBF9F8"/>
+
+    <corners android:radius="20dp"/>
+    <padding android:left="10dp" android:right="10dp" android:top="10dp" android:bottom="10dp"/>
+    <stroke android:width="2dp" android:color="#000000"/>
+</shape>

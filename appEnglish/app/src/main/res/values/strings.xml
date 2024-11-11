@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">E - Dictionary</string>
+    <string name="search">Tìm Kiếm</string>
+    <string name="vocabulary">Từ vựng</string>
+    <string name="copyright">Nhóm 1</string>
+    <string name="name_copy">Bản quyền thuộc về DucSunIT</string>
+    <string name="welcome_app">Welcome</string>
+    <string name="let_go">Let\'s Go</string>
+    <string name="hint_search">Search</string>
+    <string name="desc_login">Cảm ơn bạn đã sử dụng ứng dụng của chúng tôi!
+        Chúng tôi rất trân trọng sự tin tưởng của bạn và luôn nỗ lực để mang lại
+        trải nghiệm tốt nhất. Nếu có bất kỳ ý kiến đóng góp nào,
+        hãy chia sẻ với chúng tôi. Chúc bạn sử dụng ứng dụng thật tuyệt vời!</string>
+    <string name="btn_login">Đăng nhập bằng tài khoản Google</string>
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/layoutCustom"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/custom_border"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="50dp"
+    android:layout_width="match_parent"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:contentDescription="@string/name_copy"
+        android:id="@+id/imgHome"
+        android:layout_height="30dp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:src="@drawable/home" />
+
+    <ImageView
+        android:contentDescription="@string/name_copy"
+        android:id="@+id/imgSearch"
+        android:layout_height="30dp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:src="@drawable/search" />
+
+    <ImageView
+        android:contentDescription="@string/name_copy"
+        android:id="@+id/imgDictionary"
+        android:layout_height="30dp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:src="@drawable/dictionary" />
+
+    <ImageView
+        android:contentDescription="@string/name_copy"
+        android:id="@+id/imgSetting"
+        android:layout_height="30dp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:src="@drawable/setting" />
+
+    <ImageView
+        android:contentDescription="@string/name_copy"
+        android:id="@+id/imgExit"
+        android:layout_height="30dp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:src="@drawable/exit" />
+
+</LinearLayout>
