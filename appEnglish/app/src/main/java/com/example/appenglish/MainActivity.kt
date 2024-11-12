@@ -7,6 +7,8 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
+import android.widget.GridView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -38,11 +40,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addEvents() {
-        handleHome()
-        handleSearch()
-        handleDictionary()
-        handleSetting()
-        handleExit()
+//        handleHome()
+//        handleSearch()
+//        handleDictionary()
+//        handleSetting()
+//        handleExit()
         handleLayoutSearch()
         handleLayoutVocabulary()
         handleClickLetGo()
@@ -60,18 +62,21 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun handleExit() {
-        binding.imgExit.setOnClickListener {
-            Toast.makeText(this, "Thank you", Toast.LENGTH_SHORT).show()
-            finish()
-        }
-    }
+//    private fun handleExit() {
+//        binding.imgExit.setOnClickListener {
+//            Toast.makeText(this, "Thank you", Toast.LENGTH_SHORT).show()
+//            finish()
+//        }
+//    }
 
     private fun handleLayoutVocabulary() {
         binding.layoutDictonary.setOnClickListener {
-            Toast.makeText(this, "View Vocabulary", Toast.LENGTH_SHORT).show()
+            val intentVocabulary = Intent(this, Vocabulary::class.java)
+            startActivity(intentVocabulary)
         }
     }
+
+
 
     private fun handleLayoutSearch() {
         binding.edtSearch.setOnEditorActionListener { _, actionId, _ ->
@@ -85,31 +90,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleSetting() {
-        binding.imgSetting.setOnClickListener {
-            Toast.makeText(this, "View Setting", Toast.LENGTH_SHORT).show()
-        }
-    }
+//    private fun handleSetting() {
+//        binding.imgSetting.setOnClickListener {
+//            Toast.makeText(this, "View Setting", Toast.LENGTH_SHORT).show()
+//        }
+//    }
 
-    private fun handleDictionary() {
-        binding.imgDictionary.setOnClickListener {
-            Toast.makeText(this, "View Dictionary", Toast.LENGTH_SHORT).show()
-        }
-    }
+//    private fun handleDictionary() {
+//        binding.imgDictionary.setOnClickListener {
+//            Toast.makeText(this, "View Dictionary", Toast.LENGTH_SHORT).show()
+//        }
+//    }
 
-    private fun handleSearch() {
-        binding.imgSearch.setOnClickListener {
-            binding.edtSearch.requestFocus()
-            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(binding.imgSearch, InputMethodManager.SHOW_IMPLICIT)
-        }
-    }
+//    private fun handleSearch() {
+//        binding.imgSearch.setOnClickListener {
+//            binding.edtSearch.requestFocus()
+//            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+//            imm.showSoftInput(binding.imgSearch, InputMethodManager.SHOW_IMPLICIT)
+//        }
+//    }
 
-    private fun handleHome() {
-        binding.imgHome.setOnClickListener {
-            Toast.makeText(this, "View Home", Toast.LENGTH_SHORT).show()
-        }
-    }
+//    private fun handleHome() {
+//        binding.imgHome.setOnClickListener {
+//            Toast.makeText(this, "View Home", Toast.LENGTH_SHORT).show()
+//        }
+//    }
 
 
 }

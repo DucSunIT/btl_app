@@ -1,4 +1,4 @@
 package com.example.appenglish
 
-class OutData {
+class OutData(val images: Int, val nameSubject: String) {
 }
