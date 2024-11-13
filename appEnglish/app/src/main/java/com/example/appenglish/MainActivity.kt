@@ -49,6 +49,24 @@ class MainActivity : AppCompatActivity() {
         handleLayoutVocabulary()
         handleClickLetGo()
         handleClickProfile()
+        displayListUser()
+    }
+
+    private fun displayListUser() {
+        val listUser = mutableListOf<ListMember>()
+        val listNameMember = listOf(
+            "Phạm Tiến Đức",
+            "Nông Văn Nguyên",
+            "Lý Văn Phòng",
+            "Đỗ Mạnh Hùng",
+            "Quách Trọng Long"
+        )
+
+        for(pos in listNameMember.indices){
+            listUser.add(ListMember(R.drawable.profile, listNameMember[pos], R.drawable.star_vip))
+        }
+        val customLV = CustomListMember(this, listUser)
+        binding.lvMemberGroup.adapter = customLV
     }
 
     private fun handleClickProfile() {
@@ -75,7 +93,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intentVocabulary)
         }
     }
-
 
 
     private fun handleLayoutSearch() {

@@ -4,34 +4,36 @@
     android:layout_width="match_parent"
     android:orientation="horizontal"
     android:layout_marginTop="10dp"
+    android:layout_marginBottom="50dp"
     android:background="@drawable/custom_listview"
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/imgUser"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:contentDescription="@string/name_copy"
         app:srcCompat="@drawable/profile" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/txtNameMember"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:layout_gravity="center"
         android:text="@string/name_member" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/imgVip"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:contentDescription="@string/name_copy"
-        app:srcCompat="@drawable/card_vip" />
+        app:srcCompat="@drawable/star_vip" />
 </LinearLayout>
