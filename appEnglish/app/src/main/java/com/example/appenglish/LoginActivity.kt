@@ -1,6 +1,7 @@
 package com.example.appenglish
 
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,5 +17,11 @@ class LoginActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val pivActivity = findViewById<ImageView>(R.id.imgPiv)
+        pivActivity.setOnClickListener {
+            finish()
+        }
+
     }
 }

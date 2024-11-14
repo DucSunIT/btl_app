@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 
 class CustomListMember(private val activity: Activity, private val list: List<ListMember>) :
-    ArrayAdapter<ListMember>(activity, R.layout.custom_list_view) {
+    ArrayAdapter<ListMember>(activity, R.layout.custom_members) {
 
     override fun getCount(): Int {
         return list.size
@@ -19,7 +19,7 @@ class CustomListMember(private val activity: Activity, private val list: List<Li
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val contexts = activity.layoutInflater
 
-        val rowView = contexts.inflate(R.layout.custom_list_view, parent, false)
+        val rowView = contexts.inflate(R.layout.custom_members, parent, false)
 
         val imageUser = rowView.findViewById<ImageView>(R.id.imgUser)
         val nameMember = rowView.findViewById<TextView>(R.id.txtNameMember)

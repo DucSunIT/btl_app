@@ -8,8 +8,8 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 
-class CustomGridVoca(private val activity: Activity, private val list: List<OutData>) :
-    ArrayAdapter<OutData>(activity, R.layout.custom_voca) {
+class CustomGridVoca(private val activity: Activity, private val list: List<Vocabulary>) :
+    ArrayAdapter<Vocabulary>(activity, R.layout.custom_voca) {
     override fun getCount(): Int {
         return list.size
     }

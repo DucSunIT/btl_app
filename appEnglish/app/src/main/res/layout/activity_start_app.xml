@@ -11,11 +11,12 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_marginTop="100dp"
         android:text="@string/welcome_app"
+        android:fontFamily="@font/font_main"
         android:textColor="#fff"
         android:textSize="40sp"
         android:textStyle="bold|italic" />
@@ -29,38 +30,35 @@
 
         <ImageView
             android:id="@+id/imgEllipse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/name_copy"
+            android:layout_width="260dp"
+            android:layout_height="142dp"
+            android:layout_gravity="center"
             android:layout_marginTop="50dp"
-            app:srcCompat="@drawable/elogo" />
+            android:contentDescription="@string/name_copy"
+            app:srcCompat="@drawable/e_directory" />
 
         <ImageView
             android:id="@+id/imageView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="50dp"
             android:contentDescription="@string/name_copy"
-            app:srcCompat="@drawable/astronat" />
+            app:srcCompat="@drawable/astronat2" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="90dp"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnLetGo"
+        <ImageView
+            android:id="@+id/imageView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold|italic"
-            android:textSize="25sp"
-            android:background="@drawable/layout_custom_button"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/let_go" />
+            android:contentDescription="@string/name_copy"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/bgb" />
     </LinearLayout>
 </LinearLayout>
