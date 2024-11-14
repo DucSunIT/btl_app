@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -30,14 +31,12 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         addEvents()
     }
 
     private fun addEvents() {
         handleLayoutSearch()
         handleLayoutVocabulary()
-        handleClickLetGo()
         handleClickProfile()
         displayListUser()
         handleClickVip()
@@ -48,7 +47,6 @@ class MainActivity : AppCompatActivity() {
             val dialog = AlertDialog.Builder(this)
             dialog.apply {
                 setTitle("Thông báo")
-
                 // content
                 setMessage("Chức năng đang phát triển !")
 
@@ -85,11 +83,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleClickLetGo() {
-
-    }
-
-
     private fun handleLayoutVocabulary() {
         binding.layoutDictonary.setOnClickListener {
             val intentMainVocabulary = Intent(this, MainVocabulary::class.java)
@@ -101,14 +94,19 @@ class MainActivity : AppCompatActivity() {
     private fun handleLayoutSearch() {
         binding.edtSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val intentSearch = Intent(this, SearchWordEnglish::class.java)
-                startActivity(intentSearch)
+                val searchQuery = binding.edtSearch.text.toString().trim()
+                if (searchQuery.isEmpty()) {
+                    Toast.makeText(this, "Vui lòng nhập từ cần tra", Toast.LENGTH_SHORT).show()
+                } else {
+                    val intentSearch = Intent(this, SearchWordEnglish::class.java)
+                    startActivity(intentSearch)
+                }
                 true
             } else {
                 false
             }
         }
+
+
     }
-
-
 }

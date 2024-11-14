@@ -22,6 +22,7 @@ class MainAnimals : AppCompatActivity() {
         }
 
         val listAnimals = mutableListOf<Animals>()
+//        listAnimals.add(Animals(R.drawable.lion, "/ˈlaɪən/", "Lion", R.drawable.details, R.drawable.loa))
         val imgList = listOf(
             R.drawable.lion,
             R.drawable.cat,
@@ -34,6 +35,7 @@ class MainAnimals : AppCompatActivity() {
         val soundList = listOf(R.raw.word1, R.raw.word2, R.raw.word3, R.raw.word4, R.raw.word5)
 
         val minSize = minOf(imgList.size, wordList.size, ipaList.size)
+        // 0 <=n < size
         for (item in 0 until minSize) {
             listAnimals.add(
                 Animals(
@@ -45,6 +47,7 @@ class MainAnimals : AppCompatActivity() {
                 )
             )
         }
+
         val customAnimals = CustomAnimals(this, listAnimals, soundList)
         val gvAnimals = findViewById<GridView>(R.id.gvAnimals)
         gvAnimals.adapter = customAnimals

@@ -15,8 +15,7 @@ class CustomAnimals(
     private val activity: Activity,
     private val list: List<Animals>,
     private val listSound: List<Int>
-) :
-    ArrayAdapter<Animals>(activity, R.layout.activity_animals) {
+): ArrayAdapter<Animals>(activity, R.layout.activity_animals) {
 
     override fun getCount(): Int {
         return list.size
@@ -40,6 +39,7 @@ class CustomAnimals(
         val word = rowView.findViewById<TextView>(R.id.txtWord)
         val imgDetails = rowView.findViewById<ImageView>(R.id.imgDetailsCustomAnimals)
         val imgSound = rowView.findViewById<ImageView>(R.id.imgSoundCustomAnimals)
+
 
         imgWords.setImageResource(list[position].imageWord)
         ipaWord.text = list[position].ipaWord

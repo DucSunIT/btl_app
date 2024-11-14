@@ -31,10 +31,8 @@ class LoginActivity : AppCompatActivity() {
             val dialog = AlertDialog.Builder(this)
             dialog.apply {
                 setTitle("Thông báo")
-
                 // content
                 setMessage("Chức năng đang phát triển !")
-
                 // neagtive -
                 setNegativeButton("OK"){ dialogInterface: DialogInterface, i: Int ->
                     dialogInterface.dismiss()
@@ -42,6 +40,5 @@ class LoginActivity : AppCompatActivity() {
             }
             dialog.show()
         }
-
     }
 }

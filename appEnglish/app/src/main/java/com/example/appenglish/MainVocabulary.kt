@@ -75,8 +75,6 @@ class MainVocabulary : AppCompatActivity() {
     private fun handlePivVocabulary() {
         val btnPiv = findViewById<ImageView>(R.id.imgPiv)
         btnPiv.setOnClickListener {
-//            val intentPiv = Intent(this, MainActivity::class.java)
-//            startActivity(intentPiv)
             finish()
         }
     }
