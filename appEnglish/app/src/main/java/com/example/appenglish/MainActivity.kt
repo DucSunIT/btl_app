@@ -1,10 +1,12 @@
 package com.example.appenglish
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -38,6 +40,25 @@ class MainActivity : AppCompatActivity() {
         handleClickLetGo()
         handleClickProfile()
         displayListUser()
+        handleClickVip()
+    }
+
+    private fun handleClickVip() {
+        binding.imgPremium.setOnClickListener {
+            val dialog = AlertDialog.Builder(this)
+            dialog.apply {
+                setTitle("Thông báo")
+
+                // content
+                setMessage("Chức năng đang phát triển !")
+
+                // neagtive -
+                setNegativeButton("OK") { dialogInterface: DialogInterface, i: Int ->
+                    dialogInterface.dismiss()
+                }
+            }
+            dialog.show()
+        }
     }
 
     private fun displayListUser() {
