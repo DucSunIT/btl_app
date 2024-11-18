@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/layout_startapp"
     android:orientation="vertical"
-    tools:context=".SearchWordEnglish">
+    tools:context=".SearchWordActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

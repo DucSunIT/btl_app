@@ -21,24 +21,40 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        val pivActivity = findViewById<ImageView>(R.id.imgPiv)
-        pivActivity.setOnClickListener {
-            finish()
-        }
+        // gọi hàm
+        handleClickPreviousLogin()
+        handleClickBtnLogin()
+    }
 
+    /*
+    * Hàm có chức năng xử lý sự kiện khi người dụng click vào
+    * nút đăng nhập bằng tài khoản google
+    * sẽ hiện ra một thông báo (AlertDialog)*/
+    private fun handleClickBtnLogin() {
         val loginGoogle = findViewById<Button>(R.id.btnLoginGoogle)
         loginGoogle.setOnClickListener {
             val dialog = AlertDialog.Builder(this)
             dialog.apply {
+                // tiêu đề của dialog
                 setTitle("Thông báo")
-                // content
+                // Nội dung của dialog
                 setMessage("Chức năng đang phát triển !")
-                // neagtive -
+                /*Nếu người dùng bấm OK dialog sẽ ẩn đi*/
                 setNegativeButton("OK"){ dialogInterface: DialogInterface, i: Int ->
                     dialogInterface.dismiss()
                 }
             }
             dialog.show()
+        }
+    }
+
+    /*Hàm có chức năng xử lý khi người dùng
+    * bấm vào mũi tên quay lại ở LoginActivity
+    * sẽ quay lại activity trước*/
+    private fun handleClickPreviousLogin() {
+        val pivActivity = findViewById<ImageView>(R.id.imgPiv)
+        pivActivity.setOnClickListener {
+            finish()
         }
     }
 }
