@@ -17,4 +17,8 @@
     <string name="name_word">Lion</string>
     <string name="ipa">/ˈlaɪ.ən/</string>
     <string name="title_animals">Động Vật</string>
+    <string name="hint_auto">Search...</string>
+    <string name="txt_word">Word</string>
+    <string name="txt_ipa">IPA</string>
+    <string name="txt_Type">Type</string>
 </resources>

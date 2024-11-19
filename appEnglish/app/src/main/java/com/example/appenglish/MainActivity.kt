@@ -3,25 +3,42 @@ package com.example.appenglish
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
+import android.database.Cursor
+import android.database.MatrixCursor
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.inputmethod.EditorInfo
-import android.widget.CursorAdapter
-import android.widget.Toast
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ListView
+import android.widget.PopupWindow
+import android.widget.SearchView
+import android.widget.SearchView.OnQueryTextListener
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isEmpty
+import androidx.core.view.isNotEmpty
+import androidx.core.widget.PopupWindowCompat
 import com.example.appenglish.databinding.ActivityMainBinding
+import java.util.zip.Inflater
 
 @SuppressLint("StaticFieldLeak")
 private lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var helper: DatabaseHelper
-    private lateinit var cursor: CursorAdapter
+    private lateinit var cursor: Cursor
+    private var adt: CustomCursorAdapter? = null
     private val listMember = mutableListOf<ListMember>()
+    private val wordList = mutableListOf<SugesstionsWord>()
+    private lateinit var popupWindow: PopupWindow
+    private lateinit var listView: ListView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,11 +53,20 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // Tìm phần "gạch chân" (SearchPlate) và loại bỏ nền
+//        val searchPlate =
+//            binding.searchView.findViewById<View>(androidx.appcompat.R.id.search_plate)
+//        searchPlate?.setBackgroundColor(Color.TRANSPARENT)
+
+        val cursor = null // Hoặc một con trỏ lấy dữ liệu ban đầu nếu có
+        adt = CustomCursorAdapter(this, cursor)
+        binding.lvSuggest.adapter = adt // Gán adapter cho ListView hoặc RecyclerView
+        searchContents()
         addEvents()
     }
 
     private fun addEvents() {
-        handleLayoutSearch()
         handleLayoutVocabulary()
         handleClickProfile()
         displayListUser()
@@ -73,7 +99,7 @@ class MainActivity : AppCompatActivity() {
         /*Vẽ lên ListView sử dụng adapter, dữ liệu laasy từ csdl*/
         helper = DatabaseHelper(this)
         helper.openDatabase()
-        handleDatabase(helper)
+        handleDataMembers(helper)
         val customLV = CustomListMember(this, listMember)
         binding.lvMemberGroup.adapter = customLV
 
@@ -98,41 +124,75 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /*Hàm có chức năng xử lý sự kiện khi người dùng tìm từ*/
-    private fun handleLayoutSearch() {
-        binding.edtSearch.setOnEditorActionListener { _, actionId, _ ->
-            /*Nếu người dùng sau khi nhập xong từ bấm nút xong trên
-            * bàn phím sẽ nhận sự kiện tìm kiếm*/
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                /*biến link đến view edtSearch*/
-                val searchQuery = binding.edtSearch.text.toString().trim()
-                /*Kiếm tra nếu trong edtSearch rỗng*/
-                if (searchQuery.isEmpty()) {
-                    Toast.makeText(this, "Vui lòng nhập từ cần tra", Toast.LENGTH_SHORT).show()
-                } else {
-                    /*Gọi đến Activity sau khi tra từ*/
-                    val intentSearch = Intent(this, SearchWordActivity::class.java)
-                    startActivity(intentSearch)
-                }
-                true
-            } else {
-                false
-            }
-        }
-    }
-
     /*Hàm có chức năng truy vấn csdl và đẩy dữ liệu vào List database*/
     @SuppressLint("Recycle")
-    private fun handleDatabase(helper: DatabaseHelper) {
+    private fun handleDataMembers(helper: DatabaseHelper) {
         val db = helper.readableDatabase
         val res = db.rawQuery("SELECT FULLNAME FROM MEMBERS", null)
-        if(res.moveToFirst()){
+        if (res.moveToFirst()) {
             listMember.clear()
-            do{
+            do {
                 val fullName = res.getString(0)
                 listMember.add(ListMember(R.drawable.profile, fullName, R.drawable.star_vip))
-            }while (res.moveToNext())
+            } while (res.moveToNext())
+        }
+
+        res.close()
+    }
+
+    @SuppressLint("Recycle")
+    private fun handleDataWord(helper: DatabaseHelper) {
+        val db = helper.readableDatabase
+        val res = db.rawQuery("SELECT word, ipa, definition FROM dictionary LIMIT 50", null)
+        if (res.moveToFirst()) {
+//            wordList.clear()
+            do {
+                val word = res.getString(res.getColumnIndexOrThrow("word"))
+                val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
+//                val type = res.getString(res.getColumnIndexOrThrow("type"))
+                val definition = res.getString(res.getColumnIndexOrThrow("definition"))
+                wordList.add(SugesstionsWord(word, "/$ipa/", definition))
+                Log.d("WORD", word)
+
+                Log.d("DEBUG", "DatabaseHelper: $helper")
+                Log.d("DEBUG", "wordList: $wordList")
+                Log.d("DEBUG", "Database result count: ${res.count}")
+            } while (res.moveToNext())
+        } else {
+            Log.e("Database", "No data found in DICTIONARY")
         }
         res.close()
     }
+
+    private fun searchContents() {
+        binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val db = helper.readableDatabase
+                val query = "${newText}%"
+
+                // Truy vấn cơ sở dữ liệu theo từ khóa người dùng nhập
+                cursor = db.rawQuery(
+                    "SELECT ID AS _id, WORD, IPA, TYPE FROM DICTIONARY WHERE WORD LIKE ?",
+                    arrayOf(query),
+                    null
+                )
+
+                Log.d("Cursor", "$cursor")
+                if (cursor.count > 0) {
+                    adt?.changeCursor(cursor)
+                    binding.lvSuggest.visibility = View.VISIBLE
+                }
+                if (newText.isNullOrEmpty()) {
+                    binding.lvSuggest.visibility = View.GONE
+                }
+                return true
+            }
+        })
+    }
+
 }

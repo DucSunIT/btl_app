@@ -6,4 +6,7 @@
     </style>
 
     <style name="Theme.AppEnglish" parent="Base.Theme.AppEnglish" />
+    <style name="CustomSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>
