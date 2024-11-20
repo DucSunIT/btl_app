@@ -19,12 +19,17 @@ import android.widget.SearchView.OnQueryTextListener
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isEmpty
 import androidx.core.view.isNotEmpty
 import androidx.core.widget.PopupWindowCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.appenglish.databinding.ActivityMainBinding
+import com.example.appenglish.databinding.PopupSuggestBinding
 import java.util.zip.Inflater
 
 @SuppressLint("StaticFieldLeak")
@@ -32,12 +37,9 @@ private lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var helper: DatabaseHelper
-    private lateinit var cursor: Cursor
-    private var adt: CustomCursorAdapter? = null
     private val listMember = mutableListOf<ListMember>()
-    private val wordList = mutableListOf<SugesstionsWord>()
+    private val wordList = mutableListOf<String>()
     private lateinit var popupWindow: PopupWindow
-    private lateinit var listView: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,16 +55,6 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        // Tìm phần "gạch chân" (SearchPlate) và loại bỏ nền
-//        val searchPlate =
-//            binding.searchView.findViewById<View>(androidx.appcompat.R.id.search_plate)
-//        searchPlate?.setBackgroundColor(Color.TRANSPARENT)
-
-        val cursor = null // Hoặc một con trỏ lấy dữ liệu ban đầu nếu có
-        adt = CustomCursorAdapter(this, cursor)
-        binding.lvSuggest.adapter = adt // Gán adapter cho ListView hoặc RecyclerView
-        searchContents()
         addEvents()
     }
 
@@ -71,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         handleClickProfile()
         displayListUser()
         handleClickVip()
+        popupSuggest()
     }
 
     /*
@@ -140,59 +133,87 @@ class MainActivity : AppCompatActivity() {
         res.close()
     }
 
-    @SuppressLint("Recycle")
-    private fun handleDataWord(helper: DatabaseHelper) {
-        val db = helper.readableDatabase
-        val res = db.rawQuery("SELECT word, ipa, definition FROM dictionary LIMIT 50", null)
-        if (res.moveToFirst()) {
-//            wordList.clear()
-            do {
-                val word = res.getString(res.getColumnIndexOrThrow("word"))
-                val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
-//                val type = res.getString(res.getColumnIndexOrThrow("type"))
-                val definition = res.getString(res.getColumnIndexOrThrow("definition"))
-                wordList.add(SugesstionsWord(word, "/$ipa/", definition))
-                Log.d("WORD", word)
 
-                Log.d("DEBUG", "DatabaseHelper: $helper")
-                Log.d("DEBUG", "wordList: $wordList")
-                Log.d("DEBUG", "Database result count: ${res.count}")
-            } while (res.moveToNext())
-        } else {
-            Log.e("Database", "No data found in DICTIONARY")
+    private fun popupSuggest() {
+        val inflater = LayoutInflater.from(this)
+        val popupView = inflater.inflate(R.layout.popup_suggest, null)
+        popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            800
+        )
+        popupWindow.isFocusable = false
+        popupWindow.isOutsideTouchable = true
+
+        // Gắn RecyclerView vào PopupWindow
+        val recyclerView = popupView.findViewById<RecyclerView>(R.id.rvSuggest)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        val adapter = RvAdapter(wordList) { selectedItem ->
+            binding.searchView.setQuery(selectedItem, false)
+            popupWindow.dismiss()
         }
-        res.close()
-    }
 
-    private fun searchContents() {
-        binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
+        recyclerView.adapter = adapter
 
+        val dividerItemDecoration = DividerItemDecoration(
+            recyclerView.context,
+            DividerItemDecoration.VERTICAL
+        )
+        dividerItemDecoration.setDrawable(
+            ContextCompat.getDrawable(this, R.drawable.custom_line)!!
+        )
+        recyclerView.addItemDecoration(dividerItemDecoration)
+        // Hiển thị PopupWindow khi SearchView được focus
+        binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                popupWindow.showAsDropDown(binding.searchView)
+            } else {
+                popupWindow.dismiss()
+            }
+        }
+
+        // Lọc gợi ý khi người dùng nhập
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                popupWindow.dismiss()
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                val db = helper.readableDatabase
-                val query = "${newText}%"
-
-                // Truy vấn cơ sở dữ liệu theo từ khóa người dùng nhập
-                cursor = db.rawQuery(
-                    "SELECT ID AS _id, WORD, IPA, TYPE FROM DICTIONARY WHERE WORD LIKE ?",
-                    arrayOf(query),
-                    null
-                )
-
-                Log.d("Cursor", "$cursor")
-                if (cursor.count > 0) {
-                    adt?.changeCursor(cursor)
-                    binding.lvSuggest.visibility = View.VISIBLE
-                }
                 if (newText.isNullOrEmpty()) {
-                    binding.lvSuggest.visibility = View.GONE
+                    popupWindow.dismiss()
+                    return false
+                }
+                val query = "${newText}%"
+                helper = DatabaseHelper(applicationContext)
+                helper.openDatabase()
+                val db = helper.readableDatabase
+                wordList.clear()
+                val res = db.rawQuery(
+                    "select word, ipa, type from dictionary where word like ?", arrayOf(query), null
+                )
+                Log.d("QUERY", "$query")
+                if (res.moveToFirst()) {
+                    do {
+                        val word = res.getString(res.getColumnIndexOrThrow("word"))
+                        val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
+                        val type = res.getString(res.getColumnIndexOrThrow("type"))
+                        Log.d("DATA", "Fetched word: $word")
+                        wordList.add("$word \n/$ipa/ \n$type")
+                    } while (res.moveToNext())
+                }
+                res.close()
+
+                if (wordList.isEmpty()) {
+                    popupWindow.dismiss()
+                } else {
+                    adapter.updateData(wordList)
+                    if (!popupWindow.isShowing) {
+                        popupWindow.showAsDropDown(binding.searchView)
+                    }
                 }
                 return true
             }
         })
     }
-
 }

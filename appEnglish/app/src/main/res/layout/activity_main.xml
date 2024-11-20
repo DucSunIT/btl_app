@@ -88,24 +88,6 @@
 
         </SearchView>
 
-        <FrameLayout
-            android:id="@+id/frameLayoutListView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/searchView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- ListView -->
-        <ListView
-            android:id="@+id/lvSuggest"
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:background="@drawable/custom_bg_suggest"
-            android:elevation="8dp"
-            android:translationZ="8dp"
-            android:visibility="gone" />
-        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
