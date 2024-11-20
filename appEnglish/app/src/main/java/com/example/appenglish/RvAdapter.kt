@@ -24,8 +24,10 @@ class RvAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = suggestions[position]
-        holder.itemView.setOnClickListener { onClick(suggestions[position]) }
+        val rawText = suggestions[position]
+        val word = rawText.split(" ")[0]
+        holder.textView.text = rawText
+        holder.itemView.setOnClickListener { onClick(word) }
     }
 
     override fun getItemCount(): Int = suggestions.size
