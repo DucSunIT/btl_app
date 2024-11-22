@@ -16,13 +16,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".MainSuggestions"
+            android:name=".MainToys"
             android:exported="false" />
         <activity
-            android:name=".CustomCursorAdapter"
-            android:exported="false" />
-        <activity
-            android:name=".CustomSugesstions"
+            android:name=".Test"
             android:exported="false" />
         <activity
             android:name=".MainAnimals"
@@ -47,6 +44,9 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MainFruits"
             android:exported="true" />
     </application>
 

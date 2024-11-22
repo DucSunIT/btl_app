@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.GridView
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -66,6 +65,14 @@ class MainVocabulary : AppCompatActivity() {
                     0 -> {
                         val clickItemAnimals = Intent(this, MainAnimals::class.java)
                         startActivity(clickItemAnimals)
+                    }
+                    1 -> {
+                        val clickItemFruits = Intent(this, MainFruits::class.java)
+                        startActivity(clickItemFruits)
+                    }
+                    2 -> {
+                        val clickItemToys = Intent(this, MainToys::class.java)
+                        startActivity(clickItemToys)
                     }
                 }
             }

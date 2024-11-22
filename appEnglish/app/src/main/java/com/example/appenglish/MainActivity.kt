@@ -1,36 +1,27 @@
 package com.example.appenglish
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.database.Cursor
-import android.database.MatrixCursor
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
+import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
 import android.widget.SearchView
-import android.widget.SearchView.OnQueryTextListener
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isEmpty
-import androidx.core.view.isNotEmpty
-import androidx.core.widget.PopupWindowCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appenglish.databinding.ActivityMainBinding
-import com.example.appenglish.databinding.PopupSuggestBinding
-import java.util.zip.Inflater
 
 @SuppressLint("StaticFieldLeak")
 private lateinit var binding: ActivityMainBinding
@@ -133,7 +124,6 @@ class MainActivity : AppCompatActivity() {
         res.close()
     }
 
-
     private fun popupSuggest() {
         val inflater = LayoutInflater.from(this)
         val popupView = inflater.inflate(R.layout.popup_suggest, null)
@@ -176,7 +166,18 @@ class MainActivity : AppCompatActivity() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 popupWindow.dismiss()
-                return false
+                if(!query.isNullOrEmpty()){
+                    Toast.makeText(this@MainActivity, "Search $query", Toast.LENGTH_SHORT).show()
+                    
+                    // Tạo intent để chuyển sang SearchWordActivity
+                    val intent = Intent(this@MainActivity, SearchWordActivity::class.java)
+                    startActivity(intent)
+
+                }
+                // Đóng bàn phím
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.searchView.windowToken, 0)
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {

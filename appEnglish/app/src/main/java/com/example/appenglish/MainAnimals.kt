@@ -1,8 +1,7 @@
 package com.example.appenglish
 
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import android.widget.GridView
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
@@ -20,37 +19,29 @@ class MainAnimals : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        val listAnimals = mutableListOf<Animals>()
-//        listAnimals.add(Animals(R.drawable.lion, "/ˈlaɪən/", "Lion", R.drawable.details, R.drawable.loa))
         val imgList = listOf(
-            R.drawable.lion,
-            R.drawable.cat,
-            R.drawable.chicken,
             R.drawable.bear,
-            R.drawable.fox
+            R.drawable.cat,
+            R.drawable.voi,
+            R.drawable.fox,
+            R.drawable.huou,
+            R.drawable.hama,
+            R.drawable.lion,
+            R.drawable.bachtuoc,
+            R.drawable.nhim,
+            R.drawable.soc
         )
-        val ipaList = listOf("/ˈlaɪən/", "/kæt/", "/ˈʧɪkɪn/", "/beə/", "/fɒks/")
-        val wordList = listOf("Lion", "Cat", "Chicken", "Bear", "Fox")
-        val soundList = listOf(R.raw.word1, R.raw.word2, R.raw.word3, R.raw.word4, R.raw.word5)
+        val helper = DatabaseHelper(this)
+        helper.openDatabase()
 
-        val minSize = minOf(imgList.size, wordList.size, ipaList.size)
-        // 0 <=n < size
-        for (item in 0 until minSize) {
-            listAnimals.add(
-                Animals(
-                    imgList[item],
-                    ipaList[item],
-                    wordList[item],
-                    R.drawable.details,
-                    R.drawable.loa
-                )
-            )
-        }
+        val repository = VocabularyRepository(helper)
+        val getWordAnimals = repository.getVocabularyByCategory("animals")
+        val listAnimals = repository.generateInfoVocaList(getWordAnimals, imgList)
 
-        val customAnimals = CustomAnimals(this, listAnimals, soundList)
+        // Thêm các đối tượng vào danh sách và vẽ lên GridView
+        val customVocabulary = CustomVocabulary(this, listAnimals)
         val gvAnimals = findViewById<GridView>(R.id.gvAnimals)
-        gvAnimals.adapter = customAnimals
+        gvAnimals.adapter = customVocabulary
 
         val imgPivAnimals = findViewById<ImageView>(R.id.imgPivAnimals)
         imgPivAnimals.setOnClickListener {

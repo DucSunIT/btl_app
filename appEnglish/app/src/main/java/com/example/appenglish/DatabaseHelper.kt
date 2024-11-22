@@ -8,10 +8,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class DatabaseHelper(private val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VESION) {
+open class DatabaseHelper(var context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object{
         private var DATABASE_NAME = "dictionary3.db"
-        private val DATABASE_VESION = 1
+        private val DATABASE_VERSION = 1
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
