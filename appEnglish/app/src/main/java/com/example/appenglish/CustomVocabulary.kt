@@ -40,7 +40,7 @@ class CustomVocabulary(
         val ipaWord = rowView.findViewById<TextView>(R.id.txtIpaDetailVoca)
         val word = rowView.findViewById<TextView>(R.id.txtWordDetailVoca)
         val imgDetails = rowView.findViewById<ImageView>(R.id.imgDetailVoca)
-        val imgSound = rowView.findViewById<ImageView>(R.id.imgSoundDetailVoca)
+        val imgSound = rowView.findViewById<ImageView>(R.id.imgSoundVoca)
 
         /*gán các dữ liệu cho các thành phần trong view*/
         imgWords.setImageResource(list[position].imgRes)
@@ -75,7 +75,7 @@ class CustomVocabulary(
         dialogDetails.show()
     }
 
-    fun playSound(word: String) {
+    private  fun playSound(word: String) {
         /*xử lý đọc âm thanh của từ khi người dùng click vào biểu tượng loa*/
         var id = 1
         val helper = DatabaseHelper(context)
@@ -90,7 +90,6 @@ class CustomVocabulary(
         res.close()
         val mediaPlayer = MediaPlayer()
         val audioUrl = "http://146.190.96.102/$id.mp3"
-        Log.d("IDPLAY", "$id")
         try {
             // Đặt nguồn âm thanh từ URL
             mediaPlayer.setDataSource(audioUrl)

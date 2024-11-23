@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/layout_startapp"
+    android:background="@drawable/custom_bg_main"
     tools:context=".MainAnimals">
 
     <LinearLayout
@@ -17,7 +17,7 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:id="@+id/imgPivAnimals"
+            android:id="@+id/imgPivToys"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="@string/name_copy"
@@ -38,7 +38,7 @@
     </LinearLayout>
 
     <GridView
-        android:id="@+id/gvFruit"
+        android:id="@+id/gvToys"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="2"/>

@@ -60,7 +60,7 @@
                 app:srcCompat="@drawable/details" />
 
             <ImageView
-                android:id="@+id/imgSoundDetailVoca"
+                android:id="@+id/imgSoundVoca"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="72dp"

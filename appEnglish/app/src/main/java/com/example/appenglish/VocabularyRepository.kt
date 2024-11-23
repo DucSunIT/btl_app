@@ -47,10 +47,4 @@ class VocabularyRepository(private val helper: DatabaseHelper) {
 
         return uniqueVocaSet.toList()
     }
-
-    fun GridView.setupWithAdapter(activity: Activity, data: List<InfoVoca>, layout: Int) {
-        val customAdapter = CustomVocabulary(activity, data)
-        this.adapter = customAdapter
-    }
-
 }

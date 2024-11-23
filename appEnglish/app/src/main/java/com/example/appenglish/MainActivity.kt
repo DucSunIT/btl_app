@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.PopupWindow
 import android.widget.SearchView
 import android.widget.Toast
@@ -66,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             dialog.apply {
                 // tiêu đề dialog
                 setTitle("Thông báo")
-                // cnội dung dialog
+                // nội dung dialog
                 setMessage("Chức năng đang phát triển !")
                 // xử lí nút OK, người dùng bấm OK dialog sẽ ẩn đi
                 setNegativeButton("OK") { dialogInterface: DialogInterface, i: Int ->
@@ -170,7 +171,8 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this@MainActivity, "Search $query", Toast.LENGTH_SHORT).show()
                     
                     // Tạo intent để chuyển sang SearchWordActivity
-                    val intent = Intent(this@MainActivity, SearchWordActivity::class.java)
+                    val intent = Intent(this@MainActivity, GetWordSearch::class.java)
+                    intent.putExtra("SEARCH_WORD", query)
                     startActivity(intent)
 
                 }

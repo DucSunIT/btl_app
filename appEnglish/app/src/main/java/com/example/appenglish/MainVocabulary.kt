@@ -2,6 +2,7 @@ package com.example.appenglish
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.AdapterView
 import android.widget.GridView
 import android.widget.ImageView
@@ -29,16 +30,19 @@ class MainVocabulary : AppCompatActivity() {
     }
 
     private fun drawDataVoca() {
-        val titleSubject = listOf(
-            "Động vật",
-            "Hoa quả",
-            "Đồ chơi",
-            "Du lịch",
-            "Gia đình",
-            "Nhà bếp",
-            "Thể thao",
-            "Số đếm"
-        )
+        val helper = DatabaseHelper(this)
+        val db = helper.readableDatabase
+        val res = db.rawQuery("select * from vocabulary", null)
+        val vocabList = mutableListOf<String>()
+        if (res.moveToFirst()) {
+            do {
+                val name = res.getString(res.getColumnIndexOrThrow("namevoca"))
+                vocabList.add(name)
+                Log.d("NAME", name)
+            } while (res.moveToNext())
+        }
+        res.close()
+
         val imagesSubject = listOf(
             R.drawable.lion,
             R.drawable.group,
@@ -47,12 +51,13 @@ class MainVocabulary : AppCompatActivity() {
             R.drawable.family,
             R.drawable.kitchen,
             R.drawable.sport,
-            R.drawable.numbers
+            R.drawable.numbers,
+            R.drawable.mood
         )
         val listSubject = mutableListOf<Vocabulary>()
 
-        for (i in 0..titleSubject.lastIndex) if (i < imagesSubject.size) {
-            listSubject.add(Vocabulary(imagesSubject[i], titleSubject[i]))
+        for (i in 0..vocabList.lastIndex) if (i < imagesSubject.size) {
+            listSubject.add(Vocabulary(imagesSubject[i], vocabList[i]))
         }
         val gvVocabulary = findViewById<GridView>(R.id.gvVocabulary)
         val resVocabulary = CustomGridVoca(this, listSubject)
@@ -74,6 +79,11 @@ class MainVocabulary : AppCompatActivity() {
                         val clickItemToys = Intent(this, MainToys::class.java)
                         startActivity(clickItemToys)
                     }
+                    3 -> {
+
+                    }
+
+
                 }
             }
     }
