@@ -31,18 +31,18 @@ class CustomVocabulary(
 
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        /*chuyển file xml thành view*/
+        // chuyển file xml thành view
         val contexts = activity.layoutInflater
         val rowView = contexts.inflate(R.layout.custom_detail_voca, parent, false)
 
-        /*link các biến đến id của view trong file xml*/
+        // link các biến đến id của view trong file xml
         val imgWords = rowView.findViewById<ImageView>(R.id.imgDetailLargeVoca)
         val ipaWord = rowView.findViewById<TextView>(R.id.txtIpaDetailVoca)
         val word = rowView.findViewById<TextView>(R.id.txtWordDetailVoca)
         val imgDetails = rowView.findViewById<ImageView>(R.id.imgDetailVoca)
         val imgSound = rowView.findViewById<ImageView>(R.id.imgSoundVoca)
 
-        /*gán các dữ liệu cho các thành phần trong view*/
+        // gán các dữ liệu cho các thành phần trong view
         imgWords.setImageResource(list[position].imgRes)
         ipaWord.text = list[position].ipa
         word.text = list[position].word
@@ -53,7 +53,7 @@ class CustomVocabulary(
             playSound(list[position].word)
 
         }
-        /*xử lí chi tiết của từ -> đang phát triển*/
+        // xử lí chi tiết của từ -> đang phát triển
         imgDetails.setOnClickListener {
 //            viewDetailWord(word)
         }
@@ -76,7 +76,7 @@ class CustomVocabulary(
     }
 
     private  fun playSound(word: String) {
-        /*xử lý đọc âm thanh của từ khi người dùng click vào biểu tượng loa*/
+        // xử lý đọc âm thanh của từ khi người dùng click vào biểu tượng loa
         var id = 1
         val helper = DatabaseHelper(context)
         helper.openDatabase()

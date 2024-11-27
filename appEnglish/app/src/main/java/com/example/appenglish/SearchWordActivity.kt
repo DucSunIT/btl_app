@@ -28,36 +28,6 @@ class SearchWordActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-//        val list = mutableListOf<SaveDetailWord>()
-//        val intentGetData = intent
-//        val bundleGetData = intentGetData.extras
-//        if (bundleGetData != null) {
-////            var getWord = bundleGetData.getString("WORD")
-////            var getIPA = bundleGetData.getString("IPA")
-////            var getType = bundleGetData.getString("TYPE")
-////            var getDefinition = bundleGetData.getString("DEFINITION")
-////            Log.d("WORD", "$getWord")
-////            list.add("$getWord $getIPA \n $getType \n $getDefinition")
-//            val getList = bundleGetData.getParcelableArrayList("LIST",)
-//            if(getList!=null){
-//                for(item in list){
-//                    list.addAll(item)
-//                }
-//            }
-//            Log.d("LIST", "${list.size}")
-//            Log.d(
-//                "BUNDLE_CONTENTS",
-//                "Word: ${bundleGetData.getString("WORD")}, IPA: ${bundleGetData.getString("IPA")}"
-//            )
-//
-//            val adt = ArrayAdapter(
-//                this, android.R.layout.simple_list_item_1, list
-//            )
-//            val lv = findViewById<ListView>(R.id.lvDetailWord)
-//            lv.adapter = adt
-//
-//        }
-
 
         // Nhận danh sách từ Intent
         val list = intent.getParcelableArrayListExtra<SaveDetailWord>("LIST")

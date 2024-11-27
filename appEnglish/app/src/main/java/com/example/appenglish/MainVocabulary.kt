@@ -52,7 +52,6 @@ class MainVocabulary : AppCompatActivity() {
             R.drawable.kitchen,
             R.drawable.sport,
             R.drawable.numbers,
-            R.drawable.mood
         )
         val listSubject = mutableListOf<Vocabulary>()
 

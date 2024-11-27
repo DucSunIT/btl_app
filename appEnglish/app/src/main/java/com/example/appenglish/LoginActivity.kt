@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
                 setTitle("Thông báo")
                 // Nội dung của dialog
                 setMessage("Chức năng đang phát triển !")
-                /*Nếu người dùng bấm OK dialog sẽ ẩn đi*/
+                // Nếu người dùng bấm OK dialog sẽ ẩn đi
                 setNegativeButton("OK"){ dialogInterface: DialogInterface, i: Int ->
                     dialogInterface.dismiss()
                 }
