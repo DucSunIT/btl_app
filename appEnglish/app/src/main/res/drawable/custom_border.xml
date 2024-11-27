@@ -4,7 +4,8 @@
     <corners android:radius="20dp"/>
 
     <!-- Màu nền của layout -->
-    <solid android:color="#DBF9F8"/>
+<!--    <solid android:color="#DBF9F8"/>-->
+    <solid android:color="#fff"/>
 
     <!-- Khoảng cách từ biên ngoài vào nội dung bên trong -->
     <padding android:left="10dp" android:right="10dp" android:top="10dp" android:bottom="10dp"/>

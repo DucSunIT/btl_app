@@ -16,13 +16,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".RecentWord"
+            android:exported="false" />
+        <activity
+            android:name=".CustomDetailWord"
+            android:exported="false" />
+        <activity
             android:name=".GetWordSearch"
             android:exported="false" />
         <activity
             android:name=".MainToys"
-            android:exported="false" />
-        <activity
-            android:name=".Test"
             android:exported="false" />
         <activity
             android:name=".MainAnimals"

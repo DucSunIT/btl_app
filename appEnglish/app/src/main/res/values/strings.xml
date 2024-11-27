@@ -7,12 +7,14 @@
     <string name="welcome_app">Welcome</string>
     <string name="let_go">Let\'s Go</string>
     <string name="hint_search">Search</string>
-    <string name="desc_login">Vui lòng đăng nhập để lưu trữ những từ bạn đã tra. Cảm ơn bạn đã sử dụng ứng dụng của chúng tôi !!</string>
+    <string name="desc_login">Nếu như muốn sử dụng các tính năng nâng cao, vui lòng đăng nhập để nâng cấp tài khoản. Cảm ơn bạn đã sử dụng ứng dụng của chúng tôi !!</string>
     <string name="btn_login">Đăng nhập bằng tài khoản Google</string>
     <string name="name_member">Name member</string>
     <string name="title_login">Login</string>
     <string name="name_subject">Name Subject</string>
     <string name="title_vocabulary">Từ Vựng</string>
+    <string name="hobby_word">Từ yêu thích</string>
+    <string name="recent_word">Từ gần đây</string>
     <string name="name_group">THÀNH VIÊN NHÓM</string>
     <string name="name_word">Lion</string>
     <string name="ipa">/ˈlaɪ.ən/</string>

@@ -89,7 +89,7 @@ class CustomVocabulary(
         }
         res.close()
         val mediaPlayer = MediaPlayer()
-        val audioUrl = "http://146.190.96.102/$id.mp3"
+        val audioUrl = "http://178.128.52.124/audio/$id.mp3"
         try {
             // Đặt nguồn âm thanh từ URL
             mediaPlayer.setDataSource(audioUrl)

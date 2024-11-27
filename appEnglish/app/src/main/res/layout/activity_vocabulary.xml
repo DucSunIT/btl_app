@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    android:background="@drawable/custom_bg_main"
+    android:background="@drawable/layout_startapp"
     tools:context="MainVocabulary">
 
     <LinearLayout
