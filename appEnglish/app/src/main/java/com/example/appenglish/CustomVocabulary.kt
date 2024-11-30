@@ -26,7 +26,7 @@ class CustomVocabulary(
 
 
     override fun getItemId(position: Int): Long {
-        TODO("Not yet implemented")
+      return position.toLong()
     }
 
     @SuppressLint("ViewHolder")
@@ -55,12 +55,12 @@ class CustomVocabulary(
         }
         // xử lí chi tiết của từ -> đang phát triển
         imgDetails.setOnClickListener {
-//            viewDetailWord(word)
+            viewDetailWord()
         }
         return rowView
     }
 
-    private fun viewDetailWord(word: String) {
+    private fun viewDetailWord() {
         val dialogDetails = AlertDialog.Builder(activity)
         dialogDetails.apply {
             // tiêu đề của dialog

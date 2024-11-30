@@ -16,6 +16,21 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".MainNumbers"
+            android:exported="false" />
+        <activity
+            android:name=".MainSports"
+            android:exported="false" />
+        <activity
+            android:name=".MainKitchen"
+            android:exported="false" />
+        <activity
+            android:name=".MainFamily"
+            android:exported="false" />
+        <activity
+            android:name=".MainTravel"
+            android:exported="false" />
+        <activity
             android:name=".RecentWord"
             android:exported="false" />
         <activity

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    android:background="@drawable/layout_startapp"
+    android:background="#fff"
     tools:context=".LoginActivity">
 
     <LinearLayout
@@ -56,7 +56,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/custom_bg_search"
+        android:background="@drawable/custom_bg_main"
         android:orientation="horizontal">
 
         <ImageView

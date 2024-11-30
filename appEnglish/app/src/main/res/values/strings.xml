@@ -22,6 +22,11 @@
     <string name="title_voca">DucSunIT</string>
     <string name="title_fruits">Hoa Quả</string>
     <string name="title_toy">Đồ chơi</string>
+    <string name="title_travel">Du lịch</string>
+    <string name="title_family">Gia đình</string>
+    <string name="title_kitchen">Nhà bếp</string>
+    <string name="title_sports">Thể thao</string>
+    <string name="title_numbers">Số đếm</string>
     <string name="hint_auto">Search...</string>
     <string name="txt_word">Word</string>
     <string name="txt_ipa">IPA</string>

@@ -1,5 +1,8 @@
 package com.example.appenglish
 
+import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +34,7 @@ class RvAdapter(
         // Đảm bảo chỉ gọi onClick khi từ không rỗng
         holder.itemView.setOnClickListener {
             if (word.isNotEmpty()) {
+
                 onClick(word)
             }
         }
@@ -38,9 +42,12 @@ class RvAdapter(
 
     override fun getItemCount(): Int = suggestions.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(newSuggestions: List<String>) {
         // Cập nhật dữ liệu mới cho adapter
         suggestions = newSuggestions
         notifyDataSetChanged()
     }
+
+
 }

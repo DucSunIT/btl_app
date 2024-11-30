@@ -1,6 +1,8 @@
 package com.example.appenglish
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.media.MediaPlayer
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import java.io.IOException
 
 class MainRecentWord(private var context: Context, var wordList: List<SaveRecentWord>) :
@@ -20,6 +22,7 @@ class MainRecentWord(private var context: Context, var wordList: List<SaveRecent
         return wordList.size
     }
 
+    @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val rowView = LayoutInflater.from(context).inflate(R.layout.custom_recent_word, parent, false)
 
@@ -42,7 +45,18 @@ class MainRecentWord(private var context: Context, var wordList: List<SaveRecent
         }
 
         imgDC.setOnClickListener {
-            deleteItem(wordList[position].word)
+            val dialog = AlertDialog.Builder(context)
+            dialog.apply {
+                setTitle("Thông báo")
+                setMessage("Bạn chắc chắn muốn xoá !")
+                setPositiveButton("Có"){ dialogInterface: DialogInterface, i: Int ->
+                    deleteItem(wordList[position].word)
+                }
+                setNegativeButton("Không"){ dialogInterface: DialogInterface, i: Int ->
+                    dialogInterface.dismiss()
+                }
+            }
+            dialog.show()
         }
         // Đảm bảo không lan sự kiện click từ toàn bộ item
         rowView.setOnClickListener {
@@ -61,7 +75,7 @@ class MainRecentWord(private var context: Context, var wordList: List<SaveRecent
         val res = db.rawQuery(query, arrayOf(word), null)
         if (res.moveToFirst()) {
             id = res.getInt(0)
-            Log.d("IDPLAY", "$id")
+            Log.d("ID PLAY", "$id")
         }
         res.close()
         val mediaPlayer = MediaPlayer()
@@ -100,9 +114,9 @@ class MainRecentWord(private var context: Context, var wordList: List<SaveRecent
             // Thông báo cho adapter cập nhật lại giao diện
             notifyDataSetChanged()
 
-            Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Xoá thành công từ $word", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(context, "Failed to delete", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Xoá thất bại", Toast.LENGTH_SHORT).show()
         }
         db.close()
     }

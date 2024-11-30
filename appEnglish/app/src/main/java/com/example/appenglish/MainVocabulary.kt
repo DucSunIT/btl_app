@@ -79,10 +79,25 @@ class MainVocabulary : AppCompatActivity() {
                         startActivity(clickItemToys)
                     }
                     3 -> {
-
+                        val clickItemTravel = Intent(this, MainTravel::class.java)
+                        startActivity(clickItemTravel)
                     }
-
-
+                    4 -> {
+                        val clickItemFamily = Intent(this, MainFamily::class.java)
+                        startActivity(clickItemFamily)
+                    }
+                    5 -> {
+                        val clickItemKitchen = Intent(this, MainKitchen::class.java)
+                        startActivity(clickItemKitchen)
+                    }
+                    6 -> {
+                        val clickItemSports = Intent(this, MainSports::class.java)
+                        startActivity(clickItemSports)
+                    }
+                    7 -> {
+                        val clickItemNumbers = Intent(this, MainNumbers::class.java)
+                        startActivity(clickItemNumbers)
+                    }
                 }
             }
     }

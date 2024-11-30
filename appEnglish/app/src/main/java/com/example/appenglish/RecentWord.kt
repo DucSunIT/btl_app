@@ -35,9 +35,6 @@ class RecentWord : AppCompatActivity() {
         val lvRecent = findViewById<ListView>(R.id.lvRecentWord)
         adt = MainRecentWord(this, list)
         lvRecent.adapter = adt
-
-
-
     }
 
     private fun getRecentWordsFromDatabase(): ArrayList<SaveRecentWord> {
@@ -47,7 +44,7 @@ class RecentWord : AppCompatActivity() {
         val list = ArrayList<SaveRecentWord>()
 
         val res = db.rawQuery("select * from recentword", null)
-        if (res != null && res.moveToFirst()) {
+        if (res.moveToFirst()) {
             do {
                 val word = res.getString(res.getColumnIndexOrThrow("word"))
                 val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
@@ -66,9 +63,7 @@ class RecentWord : AppCompatActivity() {
                 )
             } while (res.moveToNext())
         }
-        res?.close()
+        res.close()
         return list
     }
-
-
 }

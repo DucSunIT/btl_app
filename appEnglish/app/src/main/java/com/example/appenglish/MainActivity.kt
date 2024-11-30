@@ -57,11 +57,28 @@ class MainActivity : AppCompatActivity() {
         handleClickProfile()
         displayListUser()
         handleClickVip()
-        hanldleClickRecentWord()
+        handleClickRecentWord()
+        handleLayoutHobbyWord()
         popupSuggest()
     }
 
-    private fun hanldleClickRecentWord() {
+    private fun handleLayoutHobbyWord() {
+        binding.layoutHobbyWord.setOnClickListener {
+            val dialog = AlertDialog.Builder(this)
+            dialog.apply {
+                setTitle("Thông báo")
+
+                setMessage("Chức năng đang phát triển")
+
+                setNegativeButton("OK") { dialogInterface: DialogInterface, i: Int ->
+                    dialogInterface.dismiss()
+                }
+            }
+            dialog.show()
+        }
+    }
+
+    private fun handleClickRecentWord() {
         binding.layoutRecentWord.setOnClickListener {
             val intentRecentWord = Intent(this, RecentWord::class.java)
             startActivity(intentRecentWord)
@@ -181,6 +198,29 @@ class MainActivity : AppCompatActivity() {
                             definition ?: "No definition"
                         )
                     )
+
+                    val contentValues = ContentValues()
+                    contentValues.put("word", word)
+                    contentValues.put("ipa", ipa)
+                    contentValues.put("type", type)
+                    contentValues.put("definition", definition)
+                    // Kiểm tra và chèn (tránh trùng lặp)
+                    val checkCursor = db.rawQuery(
+                        "SELECT * FROM recentword WHERE word = ?",
+                        arrayOf(word)
+                    )
+                    if (checkCursor.count == 0) {
+                        val result = db.insert("recentword", null, contentValues)
+                        if (result != -1L) {
+                            Log.d("INSERT", "Inserted word '$word'")
+                        } else {
+                            Log.e("INSERT", "Failed to insert word '$word'")
+                        }
+                    } else {
+                        Log.d("INSERT", "Word '$word' already exists in searched_words")
+                    }
+                    checkCursor.close()
+
                 } while (res.moveToNext())
             } else {
                 Log.d("Database", "No data found for $selectedItem")
@@ -230,17 +270,17 @@ class MainActivity : AppCompatActivity() {
                         arrayOf("$query%"),
                         null
                     )
-                    if (res != null && res.moveToFirst()) {
+                    if (res.moveToFirst()) {
                         do {
                             val word = res.getString(res.getColumnIndexOrThrow("word"))
                             val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
                             val type = res.getString(res.getColumnIndexOrThrow("type"))
                             val definition = res.getString(res.getColumnIndexOrThrow("definition"))
-                            Log.d("WORDMAIN", "$word")
+                            Log.d("WORD", word)
                             list.add(
                                 SaveDetailWord(
                                     word ?: "Unknown",
-                                    "/${ipa ?: "Unknown IPA"}/",
+                                    "[${ipa ?: "Unknown IPA"}]",
                                     R.drawable.loa,
                                     type ?: "Unknown Type",
                                     definition ?: "No definition"
@@ -325,4 +365,26 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+//    private fun insertToRecentWord(word: String, ipa: String, type: String, definition: String) {
+//        val contentValues = ContentValues().apply {
+//            put("word", word)
+//            put("ipa", ipa)
+//            put("type", type)
+//            put("definition", definition)
+//        }
+//
+//        val checkCursor = db.rawQuery("SELECT * FROM recentword WHERE word = ?", arrayOf(word))
+//        if (checkCursor.count == 0) {
+//            val result = db.insert("recentword", null, contentValues)
+//            if (result != -1L) {
+//                Log.d("INSERT", "Inserted word '$word'")
+//            } else {
+//                Log.e("INSERT", "Failed to insert word '$word'")
+//            }
+//        } else {
+//            Log.d("INSERT", "Word '$word' already exists in recentword")
+//        }
+//        checkCursor.close()
+//    }
 }

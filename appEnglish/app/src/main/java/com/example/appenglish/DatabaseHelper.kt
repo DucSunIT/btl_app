@@ -1,5 +1,6 @@
 package com.example.appenglish
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -8,11 +9,13 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-open class DatabaseHelper(var context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-    companion object{
+open class DatabaseHelper(var context: Context) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+    companion object {
         private var DATABASE_NAME = "dictionary3.db"
         private val DATABASE_VERSION = 1
     }
+
     override fun onCreate(db: SQLiteDatabase?) {
     }
 
@@ -20,7 +23,7 @@ open class DatabaseHelper(var context: Context): SQLiteOpenHelper(context, DATAB
     }
 
     // hàm có chức năng mở db có sẵn
-    fun openDatabase(): SQLiteDatabase{
+    fun openDatabase(): SQLiteDatabase {
         val dbPathFile = context.getDatabasePath(DATABASE_NAME)
         val file = File(dbPathFile.toString())
         /*kiểm tra xem db đã tồn tại chưa*/
@@ -57,4 +60,58 @@ open class DatabaseHelper(var context: Context): SQLiteOpenHelper(context, DATAB
             Log.e("ERROR", "Lỗi sao chép Database: ${e.message}")
         }
     }
+
+//    fun insertData() {
+//        val helper = DatabaseHelper(context)
+//        helper.openDatabase()
+//        val db = helper.readableDatabase
+//        val list = ArrayList<SaveDetailWord>()
+//        // Truy vấn cơ sở dữ liệu
+//        val res = db.rawQuery(
+//            "select * from dictionary where word like ? limit 50",
+//            null
+//        )
+//        if (res.moveToFirst()) {
+//            do {
+//                val word = res.getString(res.getColumnIndexOrThrow("word"))
+//                val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
+//                val type = res.getString(res.getColumnIndexOrThrow("type"))
+//                val definition = res.getString(res.getColumnIndexOrThrow("definition"))
+//                Log.d("WORDMAIN", "$word")
+//                list.add(
+//                    SaveDetailWord(
+//                        word ?: "Unknown",
+//                        "[${ipa ?: "Unknown IPA"}]",
+//                        R.drawable.loa,
+//                        type ?: "Unknown Type",
+//                        definition ?: "No definition"
+//                    )
+//                )
+//                // Chèn dữ liệu vào bảng khác
+//                val contentValues = ContentValues()
+//                contentValues.put("word", word)
+//                contentValues.put("ipa", ipa)
+//                contentValues.put("type", type)
+//                contentValues.put("definition", definition)
+//                // Kiểm tra và chèn (tránh trùng lặp)
+//                val checkCursor = db.rawQuery(
+//                    "SELECT * FROM recentword WHERE word = ?",
+//                    arrayOf(word)
+//                )
+//                if (checkCursor.count == 0) {
+//                    val result = db.insert("recentword", null, contentValues)
+//                    if (result != -1L) {
+//                        Log.d("INSERT", "Inserted word '$word'")
+//                    } else {
+//                        Log.e("INSERT", "Failed to insert word '$word'")
+//                    }
+//                } else {
+//                    Log.d("INSERT", "Word '$word' already exists in searched_words")
+//                }
+//                checkCursor.close()
+//            } while (res.moveToNext())
+//        }
+//        res.close()
+//    }
+
 }

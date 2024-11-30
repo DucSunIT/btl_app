@@ -1,5 +1,6 @@
 package com.example.appenglish
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.media.MediaPlayer
 import android.util.Log
@@ -19,6 +20,7 @@ class MainDetailWord(private var context: Context, var wordList: List<SaveDetail
         return wordList.size
     }
 
+    @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val rowView = LayoutInflater.from(context).inflate(R.layout.custom_detail_words, parent, false)
 
