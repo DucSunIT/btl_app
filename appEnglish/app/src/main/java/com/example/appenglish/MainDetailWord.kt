@@ -11,9 +11,11 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import data_class.SaveDetailWord
+import database.DatabaseHelper
 import java.io.IOException
 
-class MainDetailWord(private var context: Context, var wordList: List<SaveDetailWord>) :
+class MainDetailWord(private var context: Context, var wordList: ArrayList<SaveDetailWord>) :
     ArrayAdapter<SaveDetailWord>(context, R.layout.activity_custom_detail_word) {
 
     override fun getCount(): Int {
@@ -46,7 +48,11 @@ class MainDetailWord(private var context: Context, var wordList: List<SaveDetail
         }
         return rowView
     }
-
+    fun updateData(newData: ArrayList<SaveDetailWord>) {
+        wordList.clear()
+        wordList.addAll(newData)
+        notifyDataSetChanged()
+    }
     private  fun playSound(word: String) {
         /*xử lý đọc âm thanh của từ khi người dùng click vào biểu tượng loa*/
         var id = 1

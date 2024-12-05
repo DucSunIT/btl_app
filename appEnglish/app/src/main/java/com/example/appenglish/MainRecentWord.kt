@@ -13,6 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import data_class.SaveRecentWord
+import database.DatabaseHelper
 import java.io.IOException
 
 class MainRecentWord(private var context: Context, var wordList: List<SaveRecentWord>) :
@@ -120,9 +122,4 @@ class MainRecentWord(private var context: Context, var wordList: List<SaveRecent
         }
         db.close()
     }
-
-
-
-
-
 }

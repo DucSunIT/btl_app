@@ -16,34 +16,31 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".MainNumbers"
+            android:name="ui_vocabulary.MainNumbers"
             android:exported="false" />
         <activity
-            android:name=".MainSports"
+            android:name="ui_vocabulary.MainSports"
             android:exported="false" />
         <activity
-            android:name=".MainKitchen"
+            android:name="ui_vocabulary.MainKitchen"
             android:exported="false" />
         <activity
-            android:name=".MainFamily"
+            android:name="ui_vocabulary.MainFamily"
             android:exported="false" />
         <activity
-            android:name=".MainTravel"
+            android:name="ui_vocabulary.MainTravel"
             android:exported="false" />
         <activity
             android:name=".RecentWord"
             android:exported="false" />
         <activity
-            android:name=".CustomDetailWord"
-            android:exported="false" />
-        <activity
             android:name=".GetWordSearch"
             android:exported="false" />
         <activity
-            android:name=".MainToys"
+            android:name="ui_vocabulary.MainToys"
             android:exported="false" />
         <activity
-            android:name=".MainAnimals"
+            android:name="ui_vocabulary.MainAnimals"
             android:exported="false" />
         <activity
             android:name=".StartApp"
@@ -55,7 +52,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainVocabulary"
+            android:name="ui_vocabulary.MainVocabulary"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
@@ -67,7 +64,7 @@
             android:name=".MainActivity"
             android:exported="true" />
         <activity
-            android:name=".MainFruits"
+            android:name="ui_vocabulary.MainFruits"
             android:exported="true" />
     </application>
 

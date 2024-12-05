@@ -5,14 +5,13 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.SearchView
 import android.widget.Toast
@@ -26,6 +25,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appenglish.databinding.ActivityMainBinding
+import custom_ui.CustomListMember
+import data_class.ListMember
+import data_class.SaveDetailWord
+import database.DatabaseHelper
+import ui_vocabulary.MainVocabulary
 
 @SuppressLint("StaticFieldLeak")
 private lateinit var binding: ActivityMainBinding
@@ -155,96 +159,117 @@ class MainActivity : AppCompatActivity() {
     private fun popupSuggest() {
         val inflater = LayoutInflater.from(this)
         val popupView = inflater.inflate(R.layout.popup_suggest, null)
-        popupWindow = PopupWindow(
+        popupWindow = setupPopupWindow(popupView)
+        setupRecyclerView(popupView)
+        setupSearchViewListeners()
+    }
+
+    private fun setupPopupWindow(popupView: View): PopupWindow {
+        return PopupWindow(
             popupView,
             ViewGroup.LayoutParams.MATCH_PARENT,
             800
-        )
-        popupWindow.isFocusable = false
-        popupWindow.isOutsideTouchable = true
-        // Gắn RecyclerView vào PopupWindow
+        ).apply {
+            isFocusable = false
+            isOutsideTouchable = true
+        }
+    }
+
+    private fun setupRecyclerView(popupView: View) {
         val recyclerView = popupView.findViewById<RecyclerView>(R.id.rvSuggest)
         recyclerView.layoutManager = LinearLayoutManager(this)
         val adapter = RvAdapter(wordList) { selectedItem ->
-            // Đặt giá trị vào searchView và đóng PopupWindow
-            binding.searchView.setQuery(selectedItem, false)
-            popupWindow.dismiss()
-            // Chuyển sang SearchWordActivity
-            val intent = Intent(this, SearchWordActivity::class.java)
-            val bundle = Bundle()
-            // Truy vấn cơ sở dữ liệu để lấy thông tin chi tiết cho từ đã chọn
-            val helper = DatabaseHelper(applicationContext)
-            helper.openDatabase()
-            val db = helper.readableDatabase
-            val list = ArrayList<SaveDetailWord>()
-            // Truy vấn cơ sở dữ liệu với từ đã chọn
-            val res = db.rawQuery(
-                "SELECT * FROM dictionary WHERE word LIKE ?",
-                arrayOf("$selectedItem%"),
-                null
-            )
-            if (res.moveToFirst()) {
-                do {
-                    val word = res.getString(res.getColumnIndexOrThrow("word"))
-                    val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
-                    val type = res.getString(res.getColumnIndexOrThrow("type"))
-                    val definition = res.getString(res.getColumnIndexOrThrow("definition"))
-                    list.add(
-                        SaveDetailWord(
-                            word ?: "Unknown",
-                            "/${ipa ?: "Unknown IPA"}/",
-                            R.drawable.loa,
-                            type ?: "Unknown Type",
-                            definition ?: "No definition"
-                        )
-                    )
-
-                    val contentValues = ContentValues()
-                    contentValues.put("word", word)
-                    contentValues.put("ipa", ipa)
-                    contentValues.put("type", type)
-                    contentValues.put("definition", definition)
-                    // Kiểm tra và chèn (tránh trùng lặp)
-                    val checkCursor = db.rawQuery(
-                        "SELECT * FROM recentword WHERE word = ?",
-                        arrayOf(word)
-                    )
-                    if (checkCursor.count == 0) {
-                        val result = db.insert("recentword", null, contentValues)
-                        if (result != -1L) {
-                            Log.d("INSERT", "Inserted word '$word'")
-                        } else {
-                            Log.e("INSERT", "Failed to insert word '$word'")
-                        }
-                    } else {
-                        Log.d("INSERT", "Word '$word' already exists in searched_words")
-                    }
-                    checkCursor.close()
-
-                } while (res.moveToNext())
-            } else {
-                Log.d("Database", "No data found for $selectedItem")
-            }
-            res.close()
-            // Nếu có dữ liệu, thêm vào bundle
-            if (list.isNotEmpty()) {
-                bundle.putParcelableArrayList("LIST", list)
-            }
-            // Truyền bundle vào intent và chuyển tới SearchWordActivity
-            intent.putExtras(bundle)
-            startActivity(intent)
+            onWordSelected(selectedItem)
         }
         recyclerView.adapter = adapter
         val dividerItemDecoration = DividerItemDecoration(
             recyclerView.context,
             DividerItemDecoration.VERTICAL
-        )
-        dividerItemDecoration.setDrawable(
-            ContextCompat.getDrawable(this, R.drawable.custom_line)!!
-        )
+        ).apply {
+            setDrawable(
+                ContextCompat.getDrawable(
+                    this@MainActivity,
+                    R.drawable.custom_line_suggest
+                )!!
+            )
+        }
         recyclerView.addItemDecoration(dividerItemDecoration)
+    }
 
-        // Hiển thị PopupWindow khi SearchView được focus
+    private fun onWordSelected(selectedItem: String) {
+        binding.searchView.setQuery(selectedItem, false)
+        popupWindow.dismiss()
+        startSearchWordActivity(selectedItem)
+    }
+
+    private fun startSearchWordActivity(query: String) {
+        val intent = Intent(this, SearchWordActivity::class.java)
+        val bundle = Bundle()
+        val list = fetchWordDetailsFromDatabase(query)
+        if (list.isNotEmpty()) {
+            bundle.putParcelableArrayList("LIST", list)
+        }
+        intent.putExtras(bundle)
+        startActivity(intent)
+    }
+
+    private fun fetchWordDetailsFromDatabase(query: String): ArrayList<SaveDetailWord> {
+        val helper = DatabaseHelper(applicationContext)
+        helper.openDatabase()
+        val db = helper.readableDatabase
+        val list = ArrayList<SaveDetailWord>()
+        val res =
+            db.rawQuery("SELECT * FROM dictionary WHERE word LIKE ?", arrayOf("$query%"), null)
+        if (res.moveToFirst()) {
+            do {
+                val word = res.getString(res.getColumnIndexOrThrow("word"))
+                val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
+                val type = res.getString(res.getColumnIndexOrThrow("type"))
+                val definition = res.getString(res.getColumnIndexOrThrow("definition"))
+                list.add(
+                    SaveDetailWord(
+                        word ?: "Unknown",
+                        "/${ipa ?: "Unknown IPA"}/",
+                        R.drawable.loa,
+                        type ?: "Unknown Type",
+                        definition ?: "No definition"
+                    )
+                )
+                insertRecentWord(db, word, ipa, type, definition)
+            } while (res.moveToNext())
+        }
+        res.close()
+        return list
+    }
+
+    private fun insertRecentWord(
+        db: SQLiteDatabase,
+        word: String?,
+        ipa: String?,
+        type: String?,
+        definition: String?
+    ) {
+        val contentValues = ContentValues().apply {
+            put("word", word)
+            put("ipa", ipa)
+            put("type", type)
+            put("definition", definition)
+        }
+        val checkCursor = db.rawQuery("SELECT * FROM recentword WHERE word = ?", arrayOf(word))
+        if (checkCursor.count == 0) {
+            val result = db.insert("recentword", null, contentValues)
+            if (result != -1L) {
+                Log.d("INSERT", "Inserted word '$word'")
+            } else {
+                Log.e("INSERT", "Failed to insert word '$word'")
+            }
+        } else {
+            Log.d("INSERT", "Word '$word' already exists in recentword")
+        }
+        checkCursor.close()
+    }
+
+    private fun setupSearchViewListeners() {
         binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 popupWindow.showAsDropDown(binding.searchView)
@@ -254,137 +279,67 @@ class MainActivity : AppCompatActivity() {
         }
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                popupWindow.dismiss()
-                if (!query.isNullOrEmpty()) {
-                    Toast.makeText(this@MainActivity, "Search $query", Toast.LENGTH_SHORT).show()
-                    // Chuyển sang SearchWordActivity
-                    val intent = Intent(this@MainActivity, SearchWordActivity::class.java)
-                    val bundle = Bundle()
-                    val helper = DatabaseHelper(applicationContext)
-                    helper.openDatabase()
-                    val db = helper.readableDatabase
-                    val list = ArrayList<SaveDetailWord>()
-                    // Truy vấn cơ sở dữ liệu
-                    val res = db.rawQuery(
-                        "select * from dictionary where word like ? limit 50",
-                        arrayOf("$query%"),
-                        null
-                    )
-                    if (res.moveToFirst()) {
-                        do {
-                            val word = res.getString(res.getColumnIndexOrThrow("word"))
-                            val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
-                            val type = res.getString(res.getColumnIndexOrThrow("type"))
-                            val definition = res.getString(res.getColumnIndexOrThrow("definition"))
-                            Log.d("WORD", word)
-                            list.add(
-                                SaveDetailWord(
-                                    word ?: "Unknown",
-                                    "[${ipa ?: "Unknown IPA"}]",
-                                    R.drawable.loa,
-                                    type ?: "Unknown Type",
-                                    definition ?: "No definition"
-                                )
-                            )
-                            // Chèn dữ liệu vào bảng khác
-                            val contentValues = ContentValues()
-                            contentValues.put("word", word)
-                            contentValues.put("ipa", ipa)
-                            contentValues.put("type", type)
-                            contentValues.put("definition", definition)
-                            // Kiểm tra và chèn (tránh trùng lặp)
-                            val checkCursor = db.rawQuery(
-                                "SELECT * FROM recentword WHERE word = ?",
-                                arrayOf(word)
-                            )
-                            if (checkCursor.count == 0) {
-                                val result = db.insert("recentword", null, contentValues)
-                                if (result != -1L) {
-                                    Log.d("INSERT", "Inserted word '$word'")
-                                } else {
-                                    Log.e("INSERT", "Failed to insert word '$word'")
-                                }
-                            } else {
-                                Log.d("INSERT", "Word '$word' already exists in searched_words")
-                            }
-                            checkCursor.close()
-                        } while (res.moveToNext())
-                    }
-                    res?.close()
-                    // Kiểm tra danh sách trước khi đưa vào bundle
-                    if (list.isNotEmpty()) {
-                        bundle.putParcelableArrayList("LIST", list)
-                    } else {
-                        Log.d("LIST", "No words found for the query")
-                    }
-                    // Truyền dữ liệu vào intent và mở SearchWordActivity
-                    intent.putExtras(bundle)
-                    Log.d("INTENT", "$intent")
-                    startActivity(intent)
-                    // Đóng bàn phím
-                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(binding.searchView.windowToken, 0)
-                }
+                handleQuerySubmit(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText.isNullOrEmpty()) {
-                    popupWindow.dismiss()
-                    return false
-                }
-                val query = "${newText}%"
-                val helper = DatabaseHelper(applicationContext)
-                helper.openDatabase()
-                val db = helper.readableDatabase
-                wordList.clear()
-                val res = db.rawQuery(
-                    "select word, ipa, type from dictionary where word like ? limit 50",
-                    arrayOf(query),
-                    null
-                )
-                if (res.moveToFirst()) {
-                    do {
-                        val word = res.getString(res.getColumnIndexOrThrow("word"))
-                        val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
-                        val type = res.getString(res.getColumnIndexOrThrow("type"))
-                        Log.d("DATA", "Fetched word: $word")
-                        wordList.add("$word \n/$ipa/ \n$type")
-                    } while (res.moveToNext())
-                }
-                res.close()
-                if (wordList.isEmpty()) {
-                    popupWindow.dismiss()
-                } else {
-                    adapter.updateData(wordList)
-                    if (!popupWindow.isShowing) {
-                        popupWindow.showAsDropDown(binding.searchView)
-                    }
-                }
+                handleQueryChange(newText)
                 return true
             }
         })
     }
 
-//    private fun insertToRecentWord(word: String, ipa: String, type: String, definition: String) {
-//        val contentValues = ContentValues().apply {
-//            put("word", word)
-//            put("ipa", ipa)
-//            put("type", type)
-//            put("definition", definition)
-//        }
-//
-//        val checkCursor = db.rawQuery("SELECT * FROM recentword WHERE word = ?", arrayOf(word))
-//        if (checkCursor.count == 0) {
-//            val result = db.insert("recentword", null, contentValues)
-//            if (result != -1L) {
-//                Log.d("INSERT", "Inserted word '$word'")
-//            } else {
-//                Log.e("INSERT", "Failed to insert word '$word'")
-//            }
-//        } else {
-//            Log.d("INSERT", "Word '$word' already exists in recentword")
-//        }
-//        checkCursor.close()
-//    }
+    private fun handleQuerySubmit(query: String?) {
+        popupWindow.dismiss()
+        if (!query.isNullOrEmpty()) {
+            Toast.makeText(this, "Search $query", Toast.LENGTH_SHORT).show()
+            startSearchWordActivity(query)
+            hideKeyboard()
+        }
+    }
+
+    private fun handleQueryChange(newText: String?) {
+        if (newText.isNullOrEmpty()) {
+            popupWindow.dismiss()
+            return
+        }
+        updateSuggestions(newText)
+    }
+
+    private fun updateSuggestions(query: String) {
+        val helper = DatabaseHelper(applicationContext)
+        helper.openDatabase()
+        val db = helper.readableDatabase
+        wordList.clear()
+        val res = db.rawQuery(
+            "SELECT word, ipa, type FROM dictionary WHERE word LIKE ? LIMIT 50",
+            arrayOf("$query%")
+        )
+        if (res.moveToFirst()) {
+            do {
+                val word = res.getString(res.getColumnIndexOrThrow("word"))
+                val ipa = res.getString(res.getColumnIndexOrThrow("ipa"))
+                val type = res.getString(res.getColumnIndexOrThrow("type"))
+                wordList.add("$word \n/$ipa/ \n$type")
+            } while (res.moveToNext())
+        }
+        res.close()
+        if (wordList.isEmpty()) {
+            popupWindow.dismiss()
+        } else {
+            (popupWindow.contentView.findViewById<RecyclerView>(R.id.rvSuggest).adapter as RvAdapter).updateData(
+                wordList
+            )
+            if (!popupWindow.isShowing) {
+                popupWindow.showAsDropDown(binding.searchView)
+            }
+        }
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.searchView.windowToken, 0)
+    }
+
 }
