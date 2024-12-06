@@ -219,7 +219,7 @@ class MainActivity : AppCompatActivity() {
         val db = helper.readableDatabase
         val list = ArrayList<SaveDetailWord>()
         val res =
-            db.rawQuery("SELECT * FROM dictionary WHERE word LIKE ?", arrayOf("$query%"), null)
+            db.rawQuery("SELECT * FROM dictionary WHERE word = ?", arrayOf(query), null)
         if (res.moveToFirst()) {
             do {
                 val word = res.getString(res.getColumnIndexOrThrow("word"))
@@ -255,16 +255,16 @@ class MainActivity : AppCompatActivity() {
             put("type", type)
             put("definition", definition)
         }
-        val checkCursor = db.rawQuery("SELECT * FROM recentword WHERE word = ?", arrayOf(word))
+        val checkCursor = db.rawQuery("SELECT * FROM recent_word WHERE word = ?", arrayOf(word))
         if (checkCursor.count == 0) {
-            val result = db.insert("recentword", null, contentValues)
+            val result = db.insert("recent_word", null, contentValues)
             if (result != -1L) {
                 Log.d("INSERT", "Inserted word '$word'")
             } else {
                 Log.e("INSERT", "Failed to insert word '$word'")
             }
         } else {
-            Log.d("INSERT", "Word '$word' already exists in recentword")
+            Log.d("INSERT", "Word '$word' already exists in recent_word")
         }
         checkCursor.close()
     }

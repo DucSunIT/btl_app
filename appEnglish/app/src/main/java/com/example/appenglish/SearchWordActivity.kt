@@ -155,35 +155,8 @@ class SearchWordActivity : AppCompatActivity() {
                 val word = res.getString(res.getColumnIndexOrThrow("word")) ?: "Unknown"
                 val ipa = res.getString(res.getColumnIndexOrThrow("ipa")) ?: "Unknown IPA"
                 val type = res.getString(res.getColumnIndexOrThrow("type")) ?: "Unknown Type"
-                val definition = res.getString(res.getColumnIndexOrThrow("definition")) ?: "No definition"
-
                 // Thêm từ vào danh sách
                 wordList.add("$word \n/$ipa/ \n$type")
-
-                if (newText.isNotEmpty()) {
-                    // Chèn từ vào bảng `recentword` nếu chưa tồn tại
-                    val contentValues = ContentValues().apply {
-                        put("word", word)
-                        put("ipa", ipa)
-                        put("type", type)
-                        put("definition", definition)
-                    }
-                    val checkCursor = db.rawQuery(
-                        "SELECT * FROM recentword WHERE word = ?",
-                        arrayOf(word)
-                    )
-                    if (checkCursor.count == 0) {
-                        val result = db.insert("recentword", null, contentValues)
-                        if (result != -1L) {
-                            Log.d("INSERT", "Inserted word '$word'")
-                        } else {
-                            Log.e("INSERT", "Failed to insert word '$word'")
-                        }
-                    } else {
-                        Log.d("INSERT", "Word '$word' already exists in recentword")
-                    }
-                    checkCursor.close()
-                }
             } while (res.moveToNext())
         }
         res.close()
@@ -209,8 +182,8 @@ class SearchWordActivity : AppCompatActivity() {
         val list = ArrayList<SaveDetailWord>()
 
         val res = db.rawQuery(
-            "SELECT * FROM dictionary WHERE word LIKE ? LIMIT 50",
-            arrayOf("$query%")
+            "SELECT * FROM dictionary WHERE word = ?",
+            arrayOf(query)
         )
         if (res.moveToFirst()) {
             do {
@@ -227,6 +200,27 @@ class SearchWordActivity : AppCompatActivity() {
                         definition ?: "No definition"
                     )
                 )
+                val contentValues = ContentValues().apply {
+                    put("word", word)
+                    put("ipa", ipa)
+                    put("type", type)
+                    put("definition", definition)
+                }
+                val checkCursor = db.rawQuery(
+                    "SELECT * FROM recent_word WHERE word = ?",
+                    arrayOf(word)
+                )
+                if (checkCursor.count == 0) {
+                    val result = db.insert("recent_word", null, contentValues)
+                    if (result != -1L) {
+                        Log.d("INSERT", "Inserted word '$word'")
+                    } else {
+                        Log.e("INSERT", "Failed to insert word '$word'")
+                    }
+                } else {
+                    Log.d("INSERT", "Word '$word' already exists in recent_word")
+                }
+                checkCursor.close()
             } while (res.moveToNext())
         }
         res.close()
